@@ -33,7 +33,7 @@ export async function signup(formData: FormData) {
         email,
         password,
         options: {
-            emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback`,
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://chocolate-pigeon-749557.hostingersite.com'}/auth/callback`,
         },
     })
 
