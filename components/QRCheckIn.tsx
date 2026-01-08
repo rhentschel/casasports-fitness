@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { authenticator } from 'otplib';
 
-export default function QRCheckIn() {
+interface QRCheckInProps {
+    secret: string;
+    userId: string;
+}
+
+export default function QRCheckIn({ secret, userId }: QRCheckInProps) {
     const [token, setToken] = useState('');
     const [timeLeft, setTimeLeft] = useState(30);
-
-    // Mock secret - in production this would come from the user's secure session/local storage
-    const secret = 'KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD';
 
     useEffect(() => {
         const generateToken = () => {

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+import { createClient } from '@/utils/supabase/server';
+import { startOfWeek, endOfWeek } from 'date-fns';
 
-// Mock database for demonstration purposes
-// In production, this would be a Prisma call
-let mockBookings: any[] = [];
+const prisma = new PrismaClient();
 
 export async function GET() {
     // TODO: Fetch bookings from Prisma
@@ -11,41 +12,82 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        const supabase = await createClient();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+        }
+
         const body = await request.json();
-        const { userId, resource, startTime } = body;
+        const { resource, startTime } = body;
 
-        // Validate inputs
-        if (!userId || !resource || !startTime) {
-            return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+        if (!resource || !startTime) {
+            return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
         }
 
-        // Mock Quota Check: Max 3 bookings per week
-        // In a real app: await prisma.booking.count({ ... })
-        const userBookings = mockBookings.filter(b => b.userId === userId);
-        if (userBookings.length >= 3) {
-            return NextResponse.json({ success: false, message: 'Wochenlimit erreicht (Max 3 Termine).' }, { status: 403 });
+        // 1. Check Weekly Quota (Max 3)
+        const start = startOfWeek(new Date(startTime));
+        const end = endOfWeek(new Date(startTime));
+
+        const weeklyBookings = await prisma.booking.count({
+            where: {
+                userId: user.id,
+                startTime: {
+                    gte: start,
+                    lte: end
+                },
+                status: 'CONFIRMED'
+            }
+        });
+
+        if (weeklyBookings >= 3) {
+            return NextResponse.json({ success: false, message: 'Wochenlimit erreicht (Max 3).' }, { status: 403 });
         }
 
-        // Mock Availability Check: Is slot taken?
-        const isTaken = mockBookings.some(b => b.startTime === startTime && b.resource === resource);
-        if (isTaken) {
-            return NextResponse.json({ success: false, message: 'Termin bereits vergeben.' }, { status: 409 });
+        // 2. Check Availability
+        const existing = await prisma.booking.findFirst({
+            where: {
+                resource,
+                startTime,
+                status: 'CONFIRMED'
+            }
+        });
+
+        if (existing) {
+            return NextResponse.json({ success: false, message: 'Slot reserviert.' }, { status: 409 });
         }
 
-        // Create Booking
-        const newBooking = {
-            id: Math.random().toString(36).substr(2, 9),
-            userId,
-            resource,
-            startTime,
-            createdAt: new Date().toISOString()
-        };
-        mockBookings.push(newBooking);
+        // 3. Create Booking
+        // Ensure User exists in public.User (sync if needed)
+        // We assume the user is created on signup. If not, we might fail here.
+        // Ideally we upsert the user here to be safe.
 
-        console.log('Booked:', newBooking);
+        // Check if public user exists
+        const publicUser = await prisma.user.findUnique({ where: { id: user.id } });
+        if (!publicUser) {
+            // Fallback: Create public user profile if missing
+            await prisma.user.create({
+                data: {
+                    id: user.id,
+                    email: user.email!,
+                }
+            });
+        }
 
-        return NextResponse.json({ success: true, booking: newBooking });
+        const booking = await prisma.booking.create({
+            data: {
+                userId: user.id,
+                resource,
+                startTime,
+                status: 'CONFIRMED'
+            }
+        });
+
+        return NextResponse.json({ success: true, booking });
+
     } catch (error) {
+        console.error('Booking Error:', error);
         return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
     }
 }

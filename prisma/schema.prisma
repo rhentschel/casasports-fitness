@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -19,16 +20,34 @@ enum ContractType {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid()) // Matches Supabase Auth ID
   email         String    @unique
   name          String?
   role          Role      @default(MEMBER)
+
+  // Auth & Check-in
+  checkInSecret String?   // Secret for TOTP generation (Hardware Interface)
+
   contract      Contract?
   bookings      Booking[]
   trainingPlans TrainingPlan[]
   checkIns      CheckIn[]
+  serviceRequests ServiceRequest[] // Self-Service
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model ServiceRequest {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // e.g., "MEMBER_PAUSE", "CONTRACT_CHANGE"
+  data      String?  // JSON detail
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Contract {
@@ -36,18 +55,19 @@ model Contract {
   userId    String       @unique
   user      User         @relation(fields: [userId], references: [id])
   type      ContractType @default(BASIC)
+  status    String       @default("ACTIVE")
   startDate DateTime     @default(now())
   endDate   DateTime?
-  isActive  Boolean      @default(true)
 }
 
 model Booking {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  resource  String   // e.g., "Sauna", "Course A"
+  resource  String   @default("SAUNA") // SAUNA, COURSE
   startTime DateTime
-  endTime   DateTime
+  status    String   @default("CONFIRMED")
+
   createdAt DateTime @default(now())
 }
 
@@ -55,8 +75,8 @@ model TrainingPlan {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  content   String   // JSON or Markdown of the plan
-  generatedAt DateTime @default(now())
+  content   String   // JSON or Markdown
+  createdAt DateTime @default(now())
 }
 
 model CheckIn {
