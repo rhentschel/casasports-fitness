@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+enum ContractType {
+  BASIC
+  PREMIUM
+  VIP
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  role          Role      @default(MEMBER)
+  contract      Contract?
+  bookings      Booking[]
+  trainingPlans TrainingPlan[]
+  checkIns      CheckIn[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Contract {
+  id        String       @id @default(cuid())
+  userId    String       @unique
+  user      User         @relation(fields: [userId], references: [id])
+  type      ContractType @default(BASIC)
+  startDate DateTime     @default(now())
+  endDate   DateTime?
+  isActive  Boolean      @default(true)
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  resource  String   // e.g., "Sauna", "Course A"
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+}
+
+model TrainingPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String   // JSON or Markdown of the plan
+  generatedAt DateTime @default(now())
+}
+
+model CheckIn {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  timestamp DateTime @default(now())
+  method    String   @default("QR") // QR, Manual, NFC
+}
