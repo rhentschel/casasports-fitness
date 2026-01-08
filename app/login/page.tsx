@@ -1,10 +1,11 @@
 import { login, signup } from './actions'
 
-export default function LoginPage({
-    searchParams,
-}: {
-    searchParams: { message: string }
+// Next.js 15+ requires searchParams to be a Promise
+export default async function LoginPage(props: {
+    searchParams: Promise<{ message: string }>
 }) {
+    const searchParams = await props.searchParams;
+
     return (
         <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 mx-auto min-h-screen">
             <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
@@ -45,7 +46,7 @@ export default function LoginPage({
                 </button>
 
                 {searchParams?.message && (
-                    <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
+                    <p className="mt-4 p-4 text-foreground/80 bg-red-900/10 text-center border border-red-900/20 rounded">
                         {searchParams.message}
                     </p>
                 )}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calendar, MessageSquare, Shield, Activity, User } from 'lucide-react';
+import { Calendar, MessageSquare, Shield, Activity, User, Dumbbell } from 'lucide-react';
 import QRCheckIn from '@/components/QRCheckIn';
 import { createClient } from '@/utils/supabase/server';
 import { PrismaClient } from '@prisma/client';
@@ -91,6 +91,14 @@ export default async function Home() {
             <MessageSquare className="w-5 h-5" />
           </div>
           <span className="font-semibold text-sm">AI Coach</span>
+        </Link>
+
+        {/* Training Plans */}
+        <Link href="/plans" className="col-span-2 bg-gray-900 p-4 rounded-2xl flex flex-row items-center justify-center gap-3 hover:bg-gray-800 transition-colors border border-gray-800">
+          <div className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-400">
+            <Dumbbell className="w-5 h-5" />
+          </div>
+          <span className="font-semibold text-sm">Meine Trainingspläne</span>
         </Link>
 
         {/* Admin (For Demo) */}
