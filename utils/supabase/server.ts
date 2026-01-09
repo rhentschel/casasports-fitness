@@ -4,24 +4,16 @@ import { cookies } from 'next/headers'
 export async function createClient() {
     const cookieStore = await cookies()
 
-    const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const rawKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/['"]+/g, '').trim() || ''
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.replace(/['"]+/g, '').trim() || ''
 
-    if (!rawUrl || !rawKey) {
-        console.error("CRITICAL: Supabase Environment Variables are missing!")
+    if (!supabaseUrl || !supabaseKey) {
+        console.warn("Missing Supabase environment variables")
     }
 
-    // Strip quotes and whitespace
-    const url = rawUrl?.replace(/['"]+/g, '').trim().replace(/\/$/, "")
-    const key = rawKey?.replace(/['"]+/g, '').trim()
-
-    // DNS Fallback: If we are on the server and the domain might be problematic, 
-    // we can provide an option to use the direct IP. 
-    // For now, let's just use the URL provided.
-
     return createServerClient(
-        url!,
-        key!,
+        supabaseUrl,
+        supabaseKey,
         {
             cookies: {
                 getAll() {
