@@ -8,12 +8,18 @@ export default async function AppLayout({
 }: {
     children: React.ReactNode
 }) {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+        const supabase = await createClient()
+        const { data: { user }, error } = await supabase.auth.getUser()
 
-    // Protect all app routes - redirect to login if not authenticated
-    if (!user) {
-        redirect('/login?message=Bitte melde dich an')
+        // Only redirect if we successfully checked auth and there's no user
+        // Don't redirect on errors (let the page handle it)
+        if (!error && !user) {
+            redirect('/login?message=Bitte melde dich an')
+        }
+    } catch (e) {
+        // Log error but don't crash - let pages handle auth themselves
+        console.error('Auth check in app layout failed:', e)
     }
 
     return (
