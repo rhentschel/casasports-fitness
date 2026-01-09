@@ -1,16 +1,17 @@
 import { login, signup, verifyOtp } from './actions'
-import Image from 'next/image'
+import Link from 'next/link'
 
 export default async function LoginPage(props: {
-    searchParams: Promise<{ message: string; verify?: string; email?: string }>
+    searchParams: Promise<{ message: string; verify?: string; email?: string; mode?: string }>
 }) {
     const searchParams = await props.searchParams;
     const isVerifyMode = searchParams.verify === 'true';
+    const isSignupMode = searchParams.mode === 'signup';
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center p-0 md:p-6 lg:p-8 font-sans text-white overflow-y-auto">
             <div className="max-w-[1200px] w-full min-h-0 md:min-h-[700px] grid grid-cols-1 md:grid-cols-2 bg-[#111111] border border-white/5 md:rounded-[40px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] my-4 md:my-0">
-                
+
                 {/* Left Side: Hero Image */}
                 <div className="hidden md:block relative overflow-hidden group">
                     <img
@@ -32,12 +33,12 @@ export default async function LoginPage(props: {
 
                     <div className="absolute bottom-12 left-12 right-12 space-y-4">
                         <div className="flex gap-2">
-                             <div className="w-12 h-1 bg-[#FF0000] rounded-full" />
-                             <div className="w-4 h-1 bg-white/20 rounded-full" />
+                            <div className="w-12 h-1 bg-[#FF0000] rounded-full" />
+                            <div className="w-4 h-1 bg-white/20 rounded-full" />
                         </div>
                         <h2 className="text-6xl font-black text-white leading-[0.95] tracking-tighter uppercase italic">
-                            DEIN TRAINING. <br />
-                            <span className="text-[#FF0000]">DEIN CLUB.</span>
+                            {isSignupMode ? 'WERDE TEIL' : 'DEIN TRAINING.'} <br />
+                            <span className="text-[#FF0000]">{isSignupMode ? 'DER ELITE.' : 'DEIN CLUB.'}</span>
                         </h2>
                         <p className="text-white/60 text-lg max-w-sm font-medium leading-tight">
                             Premium Coaching & Community – direkt im casasports Oer-Erkenschwick.
@@ -58,12 +59,27 @@ export default async function LoginPage(props: {
                         {!isVerifyMode ? (
                             <>
                                 <h1 className="text-5xl font-black text-white tracking-tighter mb-3 leading-[0.9] uppercase italic italic">
-                                    Bring dich in <br/>
-                                    <span className="text-[#FF0000]">Bestform.</span>
+                                    {isSignupMode ? 'Account' : 'Bring dich in'} <br />
+                                    <span className="text-[#FF0000]">{isSignupMode ? 'Erstellen.' : 'Bestform.'}</span>
                                 </h1>
-                                <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest mb-10">Logge dich ein & starte dein Training.</p>
+                                <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest mb-10">
+                                    {isSignupMode ? 'Starte jetzt deine Reise zum Ziel.' : 'Logge dich ein & starte dein Training.'}
+                                </p>
 
                                 <form className="space-y-4">
+                                    {isSignupMode && (
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-1">Vollständiger Name</label>
+                                            <input
+                                                className="w-full h-14 rounded-xl px-5 bg-white/5 border border-white/10 focus:border-[#FF0000]/50 focus:bg-white/10 transition-all outline-none text-white font-medium placeholder:text-zinc-800"
+                                                name="name"
+                                                type="text"
+                                                placeholder="Max Mustermann"
+                                                required={isSignupMode}
+                                            />
+                                        </div>
+                                    )}
+
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-1">Email Adresse</label>
                                         <input
@@ -86,26 +102,42 @@ export default async function LoginPage(props: {
                                         />
                                     </div>
 
+                                    {searchParams.message && (
+                                        <p className="text-[10px] font-bold text-[#FF0000] uppercase tracking-widest bg-[#FF0000]/10 p-3 rounded-lg border border-[#FF0000]/20">
+                                            {searchParams.message}
+                                        </p>
+                                    )}
+
                                     <div className="flex flex-col gap-3 pt-4">
-                                        <button
-                                            formAction={login}
-                                            className="w-full h-14 bg-white text-black font-black rounded-xl transition-all hover:bg-[#FF0000] hover:text-white active:scale-[0.98] shadow-xl text-md flex items-center justify-center gap-2 uppercase italic"
+                                        {isSignupMode ? (
+                                            <button
+                                                formAction={signup}
+                                                className="w-full h-14 bg-[#FF0000] text-white font-black rounded-xl transition-all hover:bg-red-700 active:scale-[0.98] shadow-xl text-md flex items-center justify-center gap-2 uppercase italic"
+                                            >
+                                                ACCOUNT ERSTELLEN
+                                            </button>
+                                        ) : (
+                                            <button
+                                                formAction={login}
+                                                className="w-full h-14 bg-white text-black font-black rounded-xl transition-all hover:bg-[#FF0000] hover:text-white active:scale-[0.98] shadow-xl text-md flex items-center justify-center gap-2 uppercase italic"
+                                            >
+                                                JETZT ANMELDEN
+                                            </button>
+                                        )}
+
+                                        <Link
+                                            href={isSignupMode ? '/login' : '/login?mode=signup'}
+                                            className="w-full h-14 bg-transparent text-white font-bold rounded-xl border border-white/10 transition-all hover:bg-white/5 active:scale-[0.98] flex items-center justify-center uppercase tracking-widest text-[10px] opacity-60 hover:opacity-100"
                                         >
-                                            JETZT ANMELDEN 
-                                        </button>
-                                        <button
-                                            formAction={signup}
-                                            className="w-full h-14 bg-transparent text-white font-bold rounded-xl border border-white/10 transition-all hover:bg-white/5 active:scale-[0.98] uppercase tracking-widest text-[10px] opacity-60 hover:opacity-100"
-                                        >
-                                            Noch kein Mitglied? Registrieren
-                                        </button>
+                                            {isSignupMode ? 'Schon Mitglied? Login' : 'Noch kein Mitglied? Registrieren'}
+                                        </Link>
                                     </div>
                                 </form>
                             </>
                         ) : (
                             <>
                                 <h1 className="text-4xl font-black text-white tracking-tighter mb-4 uppercase italic">Code eingeben</h1>
-                                <p className="text-zinc-500 text-sm font-medium">Prüfe dein Postfach: <br/><b className="text-white">{searchParams.email}</b></p>
+                                <p className="text-zinc-500 text-sm font-medium">Prüfe dein Postfach: <br /><b className="text-white">{searchParams.email}</b></p>
 
                                 <form className="space-y-6 mt-10">
                                     <input type="hidden" name="email" value={searchParams.email} />
@@ -121,6 +153,12 @@ export default async function LoginPage(props: {
                                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">6-Stelliger Code</p>
                                     </div>
 
+                                    {searchParams.message && (
+                                        <p className="text-[10px] font-bold text-[#FF0000] uppercase tracking-widest bg-[#FF0000]/10 p-3 rounded-lg border border-[#FF0000]/20">
+                                            {searchParams.message}
+                                        </p>
+                                    )}
+
                                     <div className="flex flex-col gap-4">
                                         <button
                                             formAction={verifyOtp}
@@ -128,7 +166,7 @@ export default async function LoginPage(props: {
                                         >
                                             CODE VERIFIZIEREN
                                         </button>
-                                        <a href="/login" className="text-zinc-600 text-center text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Abbrechen</a>
+                                        <Link href="/login" className="text-zinc-600 text-center text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors uppercase">Abbrechen</Link>
                                     </div>
                                 </form>
                             </>
