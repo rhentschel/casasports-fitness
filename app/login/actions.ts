@@ -30,7 +30,7 @@ export async function signup(formData: FormData) {
     const password = formData.get('password') as string
     const name = formData.get('name') as string
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -43,6 +43,28 @@ export async function signup(formData: FormData) {
 
     if (error) {
         return redirect(`/login?message=${encodeURIComponent(error.message)}`)
+    }
+
+    // IMPORTANT: Also create user in Prisma database to keep tables in sync
+    if (data.user) {
+        try {
+            const { PrismaClient } = await import('@prisma/client')
+            const prisma = new PrismaClient()
+
+            await prisma.user.create({
+                data: {
+                    id: data.user.id,
+                    email,
+                    name,
+                    role: 'MEMBER'
+                }
+            })
+
+            await prisma.$disconnect()
+        } catch (e) {
+            console.error('Failed to create Prisma user (user might already exist):', e)
+            // Don't fail signup if Prisma creation fails - user is already in Supabase
+        }
     }
 
     revalidatePath('/', 'layout')

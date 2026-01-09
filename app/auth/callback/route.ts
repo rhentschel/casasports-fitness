@@ -11,6 +11,27 @@ export async function GET(request: Request) {
         const supabase = await createClient()
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
+            // Safety: Ensure user exists in Prisma after verification
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                try {
+                    const { PrismaClient } = await import('@prisma/client')
+                    const prisma = new PrismaClient()
+                    await prisma.user.upsert({
+                        where: { id: user.id },
+                        update: {},
+                        create: {
+                            id: user.id,
+                            email: user.email!,
+                            name: user.user_metadata?.full_name || user.email?.split('@')[0],
+                            role: 'MEMBER'
+                        }
+                    })
+                    await prisma.$disconnect()
+                } catch (e) {
+                    console.error('Callback: Prisma sync failed', e)
+                }
+            }
             return NextResponse.redirect(`${origin}${next}`)
         }
     }
