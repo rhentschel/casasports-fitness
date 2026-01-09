@@ -1,8 +1,22 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Star, Users, Award, PlayCircle, MessageSquare, Calendar, MapPin, Zap, Dumbbell, ShieldCheck, Phone, Mail, Clock } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Star, Users, Award, PlayCircle, MessageSquare, Calendar, MapPin, Zap, Dumbbell, ShieldCheck, Phone, Mail, Clock, Heart, Move, Activity } from 'lucide-react';
 import Image from 'next/image';
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Auto-redirect to dashboard if already logged in
+    if (user) {
+      redirect('/dashboard');
+    }
+  } catch (e) {
+    console.warn('Session check on landing page failed, likely due to missing Supabase config.');
+  }
+
   return (
     <main className="min-h-screen bg-black text-white selection:bg-[#FF0000] selection:text-white overflow-x-hidden">
 
@@ -128,11 +142,11 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-end gap-10">
             <div className="space-y-4">
               <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic">TRAINING <br /> OHNE <span className="text-[#FF0000]">LIMITS.</span></h2>
-              <p className="text-zinc-500 font-medium max-w-md">Vom hocheffizienten EMS bis zum klassischen Krafttraining – wir haben das Equipment für deinen Erfolg.</p>
+              <p className="text-zinc-500 font-medium max-w-md">Von modernstem Krafttraining bis zur Entspannung in unserer Wellness-Oase.</p>
             </div>
             <div className="flex gap-4">
               <div className="p-4 glass-card rounded-2xl flex items-center gap-3">
-                <Zap className="w-5 h-5 text-[#FF0000]" />
+                <Activity className="w-5 h-5 text-[#FF0000]" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-zinc-300">High Performance Lab</span>
               </div>
             </div>
@@ -140,19 +154,19 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="relative group overflow-hidden rounded-[40px] h-[500px] border border-white/5">
-              <img src="/login_hero_fitness.png" alt="EMS Training" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
+              <img src="/login_hero_fitness.png" alt="Krafttraining" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
               <div className="absolute bottom-10 left-10 p-2 space-y-4">
                 <div className="w-12 h-1 bg-[#FF0000] rounded-full" />
-                <h3 className="text-4xl font-black uppercase italic">EMS TRAINING</h3>
-                <p className="text-zinc-400 font-medium max-w-xs">20 Minuten pro Woche reichen aus, um den gesamten Körper hocheffektiv zu trainieren.</p>
+                <h3 className="text-4xl font-black uppercase italic">KRAFT & AUSDAUER</h3>
+                <p className="text-zinc-400 font-medium max-w-xs">Trainiere mit modernsten Geräten von Matrix & Life Fitness in einer motivierenden Atmosphäre.</p>
               </div>
             </div>
             <div className="space-y-8">
               {[
-                { title: 'Kraft & Ausdauer', desc: 'Modernste Geräte von Matrix & Life Fitness für dein optimales Work-out.', icon: Dumbbell },
-                { title: 'Functional Area', desc: 'Großzügiger Bereich für freies Training, Calisthenics und Beweglichkeit.', icon: Zap },
-                { title: 'Kurse & HIIT', desc: 'Von Yoga bis Power-Intervalle – trainiere gemeinsam in der Community.', icon: Users },
+                { title: 'Functional Training', desc: 'Verbessere deine Performance mit freien Gewichten und athletischen Bewegungen.', icon: Move },
+                { title: 'Wellness & Sauna', desc: 'Entspanne in unserer KLAFS Sauna oder der Röger Infrarotkabine nach dem Training.', icon: Heart },
+                { title: 'Fitnesskurse', desc: 'HIIT, Bootcamp oder Body & Mind – finde den Kurs, der zu dir passt.', icon: Users },
               ].map(item => (
                 <div key={item.title} className="glass-card p-8 rounded-[32px] flex items-center gap-8 hover:bg-white/5 transition-colors border-white/5">
                   <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-[#FF0000] shrink-0">
@@ -180,8 +194,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { name: 'Starter', price: '49,90', features: ['Basis Training', '24/7 Zugang', 'App Check-In', 'Standard Support'], recommended: false },
-              { name: 'Professional', price: '69,90', features: ['Alles aus Starter', 'Getränke Flatrate', 'Sauna & Wellness', 'AI Coach Zugang'], recommended: true },
-              { name: 'VIP Premium', price: '89,90', features: ['Alles aus Professional', 'Monatliches 1:1', 'EMS Inklusive', 'Exklusive Events'], recommended: false },
+              { name: 'Professional', price: '69,90', features: ['Alles aus Starter', 'Getränke Flatrate', 'KLAFS Sauna Zugang', 'AI Coach Zugang'], recommended: true },
+              { name: 'VIP Premium', price: '89,90', features: ['Alles aus Professional', 'Monatliches 1:1 Coaching', 'Infrarotkabine Inkl.', 'Exklusive Events'], recommended: false },
             ].map((tier) => (
               <div key={tier.name} className={`relative glass-card p-10 rounded-[48px] border-white/5 flex flex-col justify-between h-full transition-transform hover:scale-[1.02] ${tier.recommended ? 'shadow-2xl shadow-[#FF0000]/10 border-[#FF0000]/20' : ''}`}>
                 {tier.recommended && (
