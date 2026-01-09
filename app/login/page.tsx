@@ -24,22 +24,22 @@ export default async function LoginPage(props: {
                         <div className="absolute top-10 left-10">
                             <div className="flex items-center gap-3 backdrop-blur-md bg-white/40 p-3 pr-6 rounded-2xl border border-white/40">
                                 <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-                                    <span className="text-white font-bold italic">N</span>
+                                    <span className="text-white font-bold italic text-lg">C</span>
                                 </div>
-                                <span className="text-black font-bold tracking-tight">Naim Obeid</span>
+                                <span className="text-black font-bold tracking-tight">casasports</span>
                             </div>
                         </div>
 
                         {/* Motivational Overlay from Image */}
                         <div className="absolute bottom-12 left-12 right-12 text-white">
                             <div className="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-xs font-bold uppercase tracking-widest mb-4">
-                                Personal Coaching
+                                Premium Fitness
                             </div>
                             <h2 className="text-6xl font-black leading-tight tracking-tighter mb-6">
-                                MEISTERE DEINEN <br /> <span className="text-black">FORTSCHRITT</span>
+                                DEIN TRAINING. <br /> <span className="text-black">DEIN CLUB.</span>
                             </h2>
                             <p className="text-white/80 text-lg max-w-sm leading-relaxed font-medium">
-                                Erreiche deine Ziele mit personalisierten Trainingsplänen und echtem Feedback.
+                                Erreiche deine Ziele mit personalisierten Plänen und moderner Technik – direkt im casasports.
                             </p>
                         </div>
                     </div>
@@ -50,9 +50,9 @@ export default async function LoginPage(props: {
                     <div className="max-w-md mx-auto w-full">
                         <div className="flex items-center gap-2 mb-10 lg:hidden">
                             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                                <span className="text-white font-black text-xs">N</span>
+                                <span className="text-white font-black text-xs">C</span>
                             </div>
-                            <span className="font-bold text-xl">Naim Obeid</span>
+                            <span className="font-bold text-xl uppercase tracking-tighter">casasports</span>
                         </div>
 
                         <div className="mb-12">
@@ -60,10 +60,10 @@ export default async function LoginPage(props: {
                                 <span className="text-lg">★</span> 5.0 Mitglieder Bewertung
                             </div>
                             <h1 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-6 underline decoration-orange-500 decoration-8 underline-offset-4">
-                                Melde dich an & <br /> gib Vollgas.
+                                Bring dich in <br /> Bestform.
                             </h1>
                             <p className="text-slate-500 text-lg leading-relaxed">
-                                Logge dich ein, um deine Trainingspläne zu sehen und deinen Tracker zu starten.
+                                Logge dich ein, um deine Trainingspläne zu verwalten und deine Fortschritte zu tracken.
                             </p>
                         </div>
 
