@@ -1,11 +1,21 @@
 import Sidebar from '@/components/navigation/Sidebar'
 import BottomNav from '@/components/navigation/BottomNav'
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
 
-export default function AppLayout({
+export default async function AppLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Protect all app routes - redirect to login if not authenticated
+    if (!user) {
+        redirect('/login?message=Bitte melde dich an')
+    }
+
     return (
         <div className="min-h-screen bg-black text-white flex">
             <Sidebar />

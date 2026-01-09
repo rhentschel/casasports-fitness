@@ -1,22 +1,8 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Star, Users, Award, PlayCircle, MessageSquare, Calendar, MapPin, Zap, Dumbbell, ShieldCheck, Phone, Mail, Clock, Heart, Move, Activity } from 'lucide-react';
 import Image from 'next/image';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
 
-export default async function LandingPage() {
-  try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    // Auto-redirect to dashboard if already logged in
-    if (user) {
-      redirect('/dashboard');
-    }
-  } catch (e) {
-    console.warn('Session check on landing page failed, likely due to missing Supabase config.');
-  }
-
+export default function LandingPage() {
   return (
     <main className="min-h-screen bg-black text-white selection:bg-[#FF0000] selection:text-white overflow-x-hidden">
 
@@ -72,11 +58,11 @@ export default async function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link href="/login" className="px-10 py-5 bg-[#FF0000] text-white font-black uppercase italic text-lg rounded-2xl shadow-2xl shadow-[#FF0000]/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
-                JETZT STARTEN <ArrowRight className="w-6 h-6" />
+                LOGIN <ArrowRight className="w-6 h-6" />
               </Link>
-              <button className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase italic text-lg rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
-                DOWNLOAD PWA <PlayCircle className="w-6 h-6" />
-              </button>
+              <Link href="/login?mode=signup" className="px-10 py-5 bg-white text-black font-black uppercase italic text-lg rounded-2xl hover:bg-[#FF0000] hover:text-white transition-all flex items-center justify-center gap-3">
+                REGISTRIEREN
+              </Link>
             </div>
           </div>
 
