@@ -118,5 +118,4 @@ export default async function LoginPage(props: {
             </div>
         </div>
     )
-    )
 }
