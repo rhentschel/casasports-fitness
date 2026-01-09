@@ -1,12 +1,19 @@
+'use client'
+
+import { useState } from 'react'
 import { login, signup, verifyOtp } from './actions'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default async function LoginPage(props: {
-    searchParams: Promise<{ message: string; verify?: string; email?: string; mode?: string }>
-}) {
-    const searchParams = await props.searchParams;
-    const isVerifyMode = searchParams.verify === 'true';
-    const isSignupMode = searchParams.mode === 'signup';
+function LoginPageContent() {
+    const searchParams = useSearchParams()
+    const isVerifyMode = searchParams.get('verify') === 'true'
+    const initialMode = searchParams.get('mode')
+    const email = searchParams.get('email')
+    const message = searchParams.get('message')
+
+    const [isSignupMode, setIsSignupMode] = useState<boolean>(initialMode === 'signup')
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center p-0 md:p-6 lg:p-8 font-sans text-white overflow-y-auto">
@@ -58,7 +65,7 @@ export default async function LoginPage(props: {
 
                         {!isVerifyMode ? (
                             <>
-                                <h1 className="text-5xl font-black text-white tracking-tighter mb-3 leading-[0.9] uppercase italic italic">
+                                <h1 className="text-5xl font-black text-white tracking-tighter mb-3 leading-[0.9] uppercase italic">
                                     {isSignupMode ? 'Account' : 'Bring dich in'} <br />
                                     <span className="text-[#FF0000]">{isSignupMode ? 'Erstellen.' : 'Bestform.'}</span>
                                 </h1>
@@ -102,9 +109,9 @@ export default async function LoginPage(props: {
                                         />
                                     </div>
 
-                                    {searchParams.message && (
+                                    {message && (
                                         <p className="text-[10px] font-bold text-[#FF0000] uppercase tracking-widest bg-[#FF0000]/10 p-3 rounded-lg border border-[#FF0000]/20">
-                                            {searchParams.message}
+                                            {message}
                                         </p>
                                     )}
 
@@ -125,22 +132,23 @@ export default async function LoginPage(props: {
                                             </button>
                                         )}
 
-                                        <Link
-                                            href={isSignupMode ? '/login' : '/login?mode=signup'}
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsSignupMode(!isSignupMode)}
                                             className="w-full h-14 bg-transparent text-white font-bold rounded-xl border border-white/10 transition-all hover:bg-white/5 active:scale-[0.98] flex items-center justify-center uppercase tracking-widest text-[10px] opacity-60 hover:opacity-100"
                                         >
                                             {isSignupMode ? 'Schon Mitglied? Login' : 'Noch kein Mitglied? Registrieren'}
-                                        </Link>
+                                        </button>
                                     </div>
                                 </form>
                             </>
                         ) : (
                             <>
                                 <h1 className="text-4xl font-black text-white tracking-tighter mb-4 uppercase italic">Code eingeben</h1>
-                                <p className="text-zinc-500 text-sm font-medium">Prüfe dein Postfach: <br /><b className="text-white">{searchParams.email}</b></p>
+                                <p className="text-zinc-500 text-sm font-medium">Prüfe dein Postfach: <br /><b className="text-white">{email}</b></p>
 
                                 <form className="space-y-6 mt-10">
-                                    <input type="hidden" name="email" value={searchParams.email} />
+                                    <input type="hidden" name="email" value={email || ''} />
                                     <div className="space-y-4 text-center">
                                         <input
                                             className="w-full h-16 rounded-2xl px-4 bg-white/5 border border-[#FF0000]/30 focus:border-[#FF0000] transition-all outline-none text-white font-black text-3xl tracking-[0.5em] text-center"
@@ -153,9 +161,9 @@ export default async function LoginPage(props: {
                                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">6-Stelliger Code</p>
                                     </div>
 
-                                    {searchParams.message && (
+                                    {message && (
                                         <p className="text-[10px] font-bold text-[#FF0000] uppercase tracking-widest bg-[#FF0000]/10 p-3 rounded-lg border border-[#FF0000]/20">
-                                            {searchParams.message}
+                                            {message}
                                         </p>
                                     )}
 
@@ -166,7 +174,7 @@ export default async function LoginPage(props: {
                                         >
                                             CODE VERIFIZIEREN
                                         </button>
-                                        <Link href="/login" className="text-zinc-600 text-center text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors uppercase">Abbrechen</Link>
+                                        <Link href="/login" className="text-zinc-600 text-center text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Abbrechen</Link>
                                     </div>
                                 </form>
                             </>
@@ -181,5 +189,17 @@ export default async function LoginPage(props: {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#FF0000] rounded-lg animate-pulse" />
+            </div>
+        }>
+            <LoginPageContent />
+        </Suspense>
     )
 }
