@@ -10,17 +10,17 @@ export default async function LoginPage(props: {
     return (
         <div className="min-h-screen bg-[#fcf5f1] flex items-center justify-center p-4 md:p-10 font-sans">
             <div className="max-w-[1400px] w-full min-h-[85vh] grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[48px] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] border border-white">
-
+                
                 {/* Left Side: Premium Image Layout */}
                 <div className="hidden lg:block relative p-8">
                     <div className="relative h-full w-full rounded-[40px] overflow-hidden group">
-                        <img
-                            src="/login_hero_fitness.png"
-                            alt="casasports Fitness"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        <img 
+                          src="/login_hero_fitness.png" 
+                          alt="casasports Fitness" 
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/10" />
-
+                        
                         {/* Branding / Badge Area */}
                         <div className="absolute top-10 left-10">
                             <div className="flex items-center gap-3 backdrop-blur-md bg-white/40 p-3 pr-6 rounded-2xl border border-white/40">
@@ -37,7 +37,7 @@ export default async function LoginPage(props: {
                                 Premium Fitness
                             </div>
                             <h2 className="text-6xl font-black leading-tight tracking-tighter mb-6">
-                                DEIN TRAINING. <br /> <span className="text-black">DEIN CLUB.</span>
+                                DEIN TRAINING. <br/> <span className="text-black">DEIN CLUB.</span>
                             </h2>
                             <p className="text-white/80 text-lg max-w-sm leading-relaxed font-medium">
                                 Erreiche deine Ziele mit personalisierten Plänen und moderner Technik – direkt im casasports.
@@ -141,7 +141,7 @@ export default async function LoginPage(props: {
                                         >
                                             CODE VERIFIZIEREN →
                                         </button>
-                                        <a
+                                        <a 
                                             href="/login"
                                             className="w-full h-16 bg-white text-slate-900 font-bold rounded-2xl border-2 border-slate-100 flex items-center justify-center hover:border-slate-900 transition-all"
                                         >
@@ -155,7 +155,7 @@ export default async function LoginPage(props: {
                         {searchParams?.message && (
                             <div className="mt-8 p-6 bg-red-50 border border-red-100 rounded-[24px]">
                                 <p className="text-red-600 text-sm font-bold text-center flex items-center justify-center gap-2">
-                                    {searchParams.message}
+                                     {searchParams.message}
                                 </p>
                             </div>
                         )}
