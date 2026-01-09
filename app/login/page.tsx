@@ -7,109 +7,116 @@ export default async function LoginPage(props: {
     const searchParams = await props.searchParams;
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-0 md:p-6 lg:p-12">
-            <div className="max-w-[1200px] w-full min-h-[700px] grid grid-cols-1 md:grid-cols-2 bg-[#141414] border border-white/5 md:rounded-[40px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+        <div className="min-h-screen bg-[#fcf5f1] flex items-center justify-center p-4 md:p-10 font-sans">
+            <div className="max-w-[1400px] w-full min-h-[85vh] grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[48px] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] border border-white">
 
-                {/* Left Side: Hero Image */}
-                <div className="hidden md:block relative overflow-hidden group">
-                    <img
-                        src="/login_hero_fitness.png"
-                        alt="Fitness Motivation"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/20 to-transparent" />
+                {/* Left Side: Premium Image Layout */}
+                <div className="hidden lg:block relative p-8">
+                    <div className="relative h-full w-full rounded-[40px] overflow-hidden group">
+                        <img
+                            src="/login_hero_fitness.png"
+                            alt="Naim Obeid Fitness"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/10" />
 
-                    {/* Branding overlay */}
-                    <div className="absolute top-12 left-12">
-                        <div className="flex items-center gap-2 mb-8">
-                            <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20">
-                                <span className="text-black font-black text-xl">N</span>
+                        {/* Branding / Badge Area */}
+                        <div className="absolute top-10 left-10">
+                            <div className="flex items-center gap-3 backdrop-blur-md bg-white/40 p-3 pr-6 rounded-2xl border border-white/40">
+                                <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                    <span className="text-white font-bold italic">N</span>
+                                </div>
+                                <span className="text-black font-bold tracking-tight">Naim Obeid</span>
                             </div>
-                            <span className="text-white font-bold text-xl tracking-tight text-shadow-xl">Naim Obeid Fitness</span>
                         </div>
-                    </div>
 
-                    <div className="absolute bottom-16 left-12 right-12 space-y-4">
-                        <div className="flex gap-2">
-                            {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-1 h-1 rounded-full bg-white/30" />)}
+                        {/* Motivational Overlay from Image */}
+                        <div className="absolute bottom-12 left-12 right-12 text-white">
+                            <div className="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-xs font-bold uppercase tracking-widest mb-4">
+                                Personal Coaching
+                            </div>
+                            <h2 className="text-6xl font-black leading-tight tracking-tighter mb-6">
+                                MEISTERE DEINEN <br /> <span className="text-black">FORTSCHRITT</span>
+                            </h2>
+                            <p className="text-white/80 text-lg max-w-sm leading-relaxed font-medium">
+                                Erreiche deine Ziele mit personalisierten Trainingsplänen und echtem Feedback.
+                            </p>
                         </div>
-                        <h2 className="text-5xl font-black text-white leading-[1.1] tracking-tighter uppercase italic drop-shadow-2xl">
-                            Master your <br />
-                            <span className="text-green-500">Progress</span>
-                        </h2>
-                        <p className="text-white/50 text-lg max-w-sm font-medium leading-relaxed">
-                            Tritt der Community bei und verwalte dein Training mit modernster KI-Technologie.
-                        </p>
                     </div>
                 </div>
 
-                {/* Right Side: Form Content */}
-                <div className="relative p-10 md:p-20 flex flex-col justify-center bg-zinc-900/10">
-                    <div className="mb-12">
-                        <div className="md:hidden flex items-center gap-2 mb-8 text-shadow-xl">
-                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                                <span className="text-black font-black">N</span>
+                {/* Right Side: Clean Form */}
+                <div className="p-10 md:p-24 flex flex-col justify-center bg-white">
+                    <div className="max-w-md mx-auto w-full">
+                        <div className="flex items-center gap-2 mb-10 lg:hidden">
+                            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                                <span className="text-white font-black text-xs">N</span>
                             </div>
-                            <span className="text-white font-bold text-lg">Naim Obeid</span>
-                        </div>
-                        <h1 className="text-4xl font-black text-white tracking-tighter mb-4">Willkommen.</h1>
-                        <p className="text-zinc-500 font-medium italic">Bereit für dein nächstes Level?</p>
-                    </div>
-
-                    <form className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-1">Email Addresse</label>
-                            <input
-                                className="w-full h-14 rounded-2xl px-5 bg-white/5 border border-white/5 focus:border-green-500/50 focus:bg-white/10 transition-all outline-none text-white font-medium"
-                                name="email"
-                                type="email"
-                                placeholder="name@beispiel.de"
-                                required
-                            />
+                            <span className="font-bold text-xl">Naim Obeid</span>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-1">Passwort</label>
-                            <input
-                                className="w-full h-14 rounded-2xl px-5 bg-white/5 border border-white/5 focus:border-green-500/50 focus:bg-white/10 transition-all outline-none text-white font-medium"
-                                type="password"
-                                name="password"
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-
-                        <div className="flex flex-col gap-4 pt-6">
-                            <button
-                                formAction={login}
-                                className="w-full h-16 bg-white text-black font-black rounded-2xl transition-all hover:bg-green-500 hover:text-black active:scale-[0.98] shadow-xl"
-                            >
-                                ANMELDEN
-                            </button>
-                            <button
-                                formAction={signup}
-                                className="w-full h-16 bg-transparent text-white font-bold rounded-2xl border border-white/10 transition-all hover:bg-white/5 active:scale-[0.98]"
-                            >
-                                ACCOUNT ERSTELLEN
-                            </button>
-                        </div>
-
-                        {searchParams?.message && (
-                            <div className="mt-8 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl">
-                                <p className="text-red-400 text-sm font-bold text-center flex items-center justify-center gap-2 uppercase tracking-tight">
-                                    <span>⚠️</span> {searchParams.message}
-                                </p>
+                        <div className="mb-12">
+                            <div className="text-orange-500 font-bold text-sm mb-4 flex items-center gap-2">
+                                <span className="text-lg">★</span> 5.0 Mitglieder Bewertung
                             </div>
-                        )}
-                    </form>
+                            <h1 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-6 underline decoration-orange-500 decoration-8 underline-offset-4">
+                                Melde dich an & <br /> gib Vollgas.
+                            </h1>
+                            <p className="text-slate-500 text-lg leading-relaxed">
+                                Logge dich ein, um deine Trainingspläne zu sehen und deinen Tracker zu starten.
+                            </p>
+                        </div>
 
-                    <div className="mt-12 text-center">
-                        <p className="text-zinc-600 text-xs font-medium uppercase tracking-widest">
-                            &copy; 2026 Naim Obeid Fitness Systems
-                        </p>
+                        <form className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="email">Email</label>
+                                <input
+                                    className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
+                                    name="email"
+                                    type="email"
+                                    placeholder="du@beispiel.de"
+                                    required
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="password">Passwort</label>
+                                <input
+                                    className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
+                                    type="password"
+                                    name="password"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-4 pt-6">
+                                <button
+                                    formAction={login}
+                                    className="w-full h-16 bg-slate-900 text-white font-black rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-2xl shadow-slate-200"
+                                >
+                                    LOGIN STARTEN →
+                                </button>
+                                <button
+                                    formAction={signup}
+                                    className="w-full h-16 bg-white text-slate-900 font-bold rounded-2xl border-2 border-slate-100 transition-all hover:border-slate-900 active:scale-[0.98]"
+                                >
+                                    NOCH KEIN MITGLIED?
+                                </button>
+                            </div>
+
+                            {searchParams?.message && (
+                                <div className="mt-8 p-6 bg-red-50 border border-red-100 rounded-[24px]">
+                                    <p className="text-red-600 text-sm font-bold text-center flex items-center justify-center gap-2">
+                                        {searchParams.message}
+                                    </p>
+                                </div>
+                            )}
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    )
     )
 }

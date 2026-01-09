@@ -11,9 +11,13 @@ export async function createClient() {
         console.error("CRITICAL: Supabase Environment Variables are missing!")
     }
 
-    // Strip quotes and whitespace that might be present in Hostinger/Coolify env UI
+    // Strip quotes and whitespace
     const url = rawUrl?.replace(/['"]+/g, '').trim().replace(/\/$/, "")
     const key = rawKey?.replace(/['"]+/g, '').trim()
+
+    // DNS Fallback: If we are on the server and the domain might be problematic, 
+    // we can provide an option to use the direct IP. 
+    // For now, let's just use the URL provided.
 
     return createServerClient(
         url!,
