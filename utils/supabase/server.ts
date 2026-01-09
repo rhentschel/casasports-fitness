@@ -4,15 +4,20 @@ import { cookies } from 'next/headers'
 export async function createClient() {
     const cookieStore = await cookies()
 
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const rawKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!rawUrl || !rawKey) {
         console.error("CRITICAL: Supabase Environment Variables are missing!")
     }
 
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, "")
+    // Strip quotes and whitespace that might be present in Hostinger/Coolify env UI
+    const url = rawUrl?.replace(/['"]+/g, '').trim().replace(/\/$/, "")
+    const key = rawKey?.replace(/['"]+/g, '').trim()
 
     return createServerClient(
         url!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        key!,
         {
             cookies: {
                 getAll() {
