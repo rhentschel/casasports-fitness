@@ -15,7 +15,7 @@ export default async function LoginPage(props: {
                     <div className="relative h-full w-full rounded-[40px] overflow-hidden group">
                         <img
                             src="/login_hero_fitness.png"
-                            alt="Naim Obeid Fitness"
+                            alt="casasports Fitness"
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/10" />

@@ -17,7 +17,7 @@ export default async function Home() {
     // We'll let middleware handle protection, but here we handle the "Guest" view
     return (
       <main className="min-h-screen bg-black text-white p-4 flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold mb-4">Willkommen bei Naim Obeid Fitness</h1>
+        <h1 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic text-green-500">casasports Dashboard</h1>
         <Link href="/login" className="px-6 py-3 bg-white text-black rounded-full font-bold">
           Login
         </Link>
