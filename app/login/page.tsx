@@ -1,10 +1,11 @@
-import { login, signup } from './actions'
+import { login, signup, verifyOtp } from './actions'
 import Image from 'next/image'
 
 export default async function LoginPage(props: {
-    searchParams: Promise<{ message: string }>
+    searchParams: Promise<{ message: string; verify?: string; email?: string }>
 }) {
     const searchParams = await props.searchParams;
+    const isVerifyMode = searchParams.verify === 'true';
 
     return (
         <div className="min-h-screen bg-[#fcf5f1] flex items-center justify-center p-4 md:p-10 font-sans">
@@ -55,64 +56,109 @@ export default async function LoginPage(props: {
                             <span className="font-bold text-xl uppercase tracking-tighter">casasports</span>
                         </div>
 
-                        <div className="mb-12">
-                            <div className="text-orange-500 font-bold text-sm mb-4 flex items-center gap-2">
-                                <span className="text-lg">★</span> 5.0 Mitglieder Bewertung
-                            </div>
-                            <h1 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-6 underline decoration-orange-500 decoration-8 underline-offset-4">
-                                Bring dich in <br /> Bestform.
-                            </h1>
-                            <p className="text-slate-500 text-lg leading-relaxed">
-                                Logge dich ein, um deine Trainingspläne zu verwalten und deine Fortschritte zu tracken.
-                            </p>
-                        </div>
-
-                        <form className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="email">Email</label>
-                                <input
-                                    className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
-                                    name="email"
-                                    type="email"
-                                    placeholder="du@beispiel.de"
-                                    required
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="password">Passwort</label>
-                                <input
-                                    className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
-                                    type="password"
-                                    name="password"
-                                    placeholder="••••••••"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-4 pt-6">
-                                <button
-                                    formAction={login}
-                                    className="w-full h-16 bg-slate-900 text-white font-black rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-2xl shadow-slate-200"
-                                >
-                                    LOGIN STARTEN →
-                                </button>
-                                <button
-                                    formAction={signup}
-                                    className="w-full h-16 bg-white text-slate-900 font-bold rounded-2xl border-2 border-slate-100 transition-all hover:border-slate-900 active:scale-[0.98]"
-                                >
-                                    NOCH KEIN MITGLIED?
-                                </button>
-                            </div>
-
-                            {searchParams?.message && (
-                                <div className="mt-8 p-6 bg-red-50 border border-red-100 rounded-[24px]">
-                                    <p className="text-red-600 text-sm font-bold text-center flex items-center justify-center gap-2">
-                                        {searchParams.message}
+                        {!isVerifyMode ? (
+                            <>
+                                <div className="mb-12">
+                                    <div className="text-orange-500 font-bold text-sm mb-4 flex items-center gap-2">
+                                        <span className="text-lg">★</span> 5.0 Mitglieder Bewertung
+                                    </div>
+                                    <h1 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-6 underline decoration-orange-500 decoration-8 underline-offset-4">
+                                        Bring dich in <br /> Bestform.
+                                    </h1>
+                                    <p className="text-slate-500 text-lg leading-relaxed">
+                                        Logge dich ein, um deine Trainingspläne zu verwalten und deine Fortschritte zu tracken.
                                     </p>
                                 </div>
-                            )}
-                        </form>
+
+                                <form className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="email">Email</label>
+                                        <input
+                                            className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
+                                            name="email"
+                                            type="email"
+                                            placeholder="du@beispiel.de"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="password">Passwort</label>
+                                        <input
+                                            className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-medium placeholder:text-slate-300"
+                                            type="password"
+                                            name="password"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-4 pt-6">
+                                        <button
+                                            formAction={login}
+                                            className="w-full h-16 bg-slate-900 text-white font-black rounded-2xl transition-all hover:bg-black active:scale-[0.98] shadow-2xl shadow-slate-200"
+                                        >
+                                            LOGIN STARTEN →
+                                        </button>
+                                        <button
+                                            formAction={signup}
+                                            className="w-full h-16 bg-white text-slate-900 font-bold rounded-2xl border-2 border-slate-100 transition-all hover:border-slate-900 active:scale-[0.98]"
+                                        >
+                                            NOCH KEIN MITGLIED?
+                                        </button>
+                                    </div>
+                                </form>
+                            </>
+                        ) : (
+                            <>
+                                <div className="mb-12">
+                                    <h1 className="text-4xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-6">
+                                        Code eingeben
+                                    </h1>
+                                    <p className="text-slate-500 text-lg leading-relaxed">
+                                        Wir haben einen Bestätigungscode an <b>{searchParams.email}</b> gesendet.
+                                    </p>
+                                </div>
+
+                                <form className="space-y-6">
+                                    <input type="hidden" name="email" value={searchParams.email} />
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-slate-800 ml-1" htmlFor="token">6-stelliger Code</label>
+                                        <input
+                                            className="w-full h-16 rounded-2xl px-6 bg-slate-50 border-2 border-transparent focus:border-slate-900 focus:bg-white transition-all outline-none text-slate-900 font-extrabold text-2xl tracking-[1em] text-center placeholder:text-slate-200"
+                                            name="token"
+                                            type="text"
+                                            placeholder="000000"
+                                            maxLength={6}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-4 pt-6">
+                                        <button
+                                            formAction={verifyOtp}
+                                            className="w-full h-16 bg-orange-500 text-white font-black rounded-2xl transition-all hover:bg-orange-600 active:scale-[0.98] shadow-2xl shadow-orange-200"
+                                        >
+                                            CODE VERIFIZIEREN →
+                                        </button>
+                                        <a
+                                            href="/login"
+                                            className="w-full h-16 bg-white text-slate-900 font-bold rounded-2xl border-2 border-slate-100 flex items-center justify-center hover:border-slate-900 transition-all"
+                                        >
+                                            ZURÜCK ZUM LOGIN
+                                        </a>
+                                    </div>
+                                </form>
+                            </>
+                        )}
+
+                        {searchParams?.message && (
+                            <div className="mt-8 p-6 bg-red-50 border border-red-100 rounded-[24px]">
+                                <p className="text-red-600 text-sm font-bold text-center flex items-center justify-center gap-2">
+                                    {searchParams.message}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

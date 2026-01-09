@@ -42,5 +42,24 @@ export async function signup(formData: FormData) {
     }
 
     revalidatePath('/', 'layout')
-    redirect('/login?message=Check email to continue sign in process')
+    redirect(`/login?message=Bitte gib den Bestätigungscode aus deiner E-Mail ein&verify=true&email=${encodeURIComponent(email)}`)
+}
+
+export async function verifyOtp(formData: FormData) {
+    const supabase = await createClient()
+    const email = formData.get('email') as string
+    const token = formData.get('token') as string
+
+    const { error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'signup'
+    })
+
+    if (error) {
+        return redirect(`/login?message=${encodeURIComponent(error.message)}&verify=true&email=${encodeURIComponent(email)}`)
+    }
+
+    revalidatePath('/', 'layout')
+    redirect('/')
 }
