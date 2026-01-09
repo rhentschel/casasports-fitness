@@ -8,36 +8,51 @@ export async function updateSession(request: NextRequest) {
         },
     })
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll() {
-                    return request.cookies.getAll()
-                },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        request.cookies.set({
-                            name,
-                            value,
-                            ...options,
-                        })
-                    )
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        response.cookies.set({ name, value, ...options })
-                    )
-                },
-            },
-        }
-    )
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    await supabase.auth.getUser()
+    // Fallback if environment variables are missing
+    if (!supabaseUrl || !supabaseKey) {
+        console.warn('Supabase environment variables are missing in middleware.')
+        return response
+    }
+
+    try {
+        const supabase = createServerClient(
+            supabaseUrl,
+            supabaseKey,
+            {
+                cookies: {
+                    getAll() {
+                        return request.cookies.getAll()
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            request.cookies.set({
+                                name,
+                                value,
+                                ...options,
+                            })
+                        )
+                        response = NextResponse.next({
+                            request: {
+                                headers: request.headers,
+                            },
+                        })
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            response.cookies.set({ name, value, ...options })
+                        )
+                    },
+                },
+            }
+        )
+
+        // Refresh session if possible
+        await supabase.auth.getUser()
+    } catch (e) {
+        console.error('Middleware session update failed:', e)
+        // Silence failure to allow public pages to load
+    }
 
     return response
 }
